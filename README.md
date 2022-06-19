@@ -119,7 +119,48 @@ To annotate an image, click the "Create/nRectBox" and draw a box over the object
 
 ## Training the dataset
 
-In the Darknet directory, open the **Data** folder and create a new folder called **"obj"**. Then copy and paste the dataset into this folder. In the **Data** folder again, copy and paste the **"coco.names"** and **"coco.data"** files and rename them to **obj.names** and **obj.data** respectively. In the "obj.names" file, replace the contents of the file with the contents of the text file placed in the data folder used for labelling. This will line up the class numbers with the names of the classes for training. In the "obj.data" file you must specify the parameters such as the number of classes in the dataset and the directories where the text files for training and validation (validation not mandatory) are. 
+In the Darknet directory, open the **Data** folder and create a new folder called **"obj"**. Then copy and paste the dataset into this folder. In the **Data** folder again, copy and paste the **"coco.names"** and **"coco.data"** files and rename them to **obj.names** and **obj.data** respectively. In the "obj.names" file, replace the contents of the file with the contents of the text file placed in the data folder used for labelling. This will line up the class numbers with the names of the classes for training. In the "obj.data" file you must specify the parameters such as the number of classes in the dataset and the directories where the text files for training and validation (validation not mandatory) are. Finally in the darknet directory, create a folder named **"Backup"**, this is where we will store our trained weights.
 
 We must establish the VRAM requirement of your system. This will allow us to determine what version of YOLO you can train your machine on, otherwise you will encounter memory issues.
-Back in the darknet directory, open the **"cfg"** folder and look for the **"**
+Back in the darknet directory, open the **"cfg"** folder and look for the **"yolov4-tiny-custom.cfg** or **"yolov4-custom.cfg** file if your system has sufficient VRAM to run it. Create a copy of the folder and rename it to something sensible, i.e. **yolov4-obj-custom.cfg**. In this file you want to change the following parameters to the following:
+
+Under "# Training"
+
+- batch=64
+- subdivisions=32
+- width=416
+- height=416
+
+Further down
+- max_batches = 2000 * Number of Classes in your dataset (i.e 12 classes means max batches = 24000)
+- steps = 0.8 * max_batches, 0.9 * max_batches
+
+Then Ctrl+F and search for **"[yolo]"**.
+
+Above each "[yolo]", change the number of filters to (number of classes + 5) * 3. So for 12 classes, (12 + 5) * 3 = 51 Filters.
+
+Then below each "[yolo]", change the number of classes to the number of classes in your dataset.
+
+Download either of the following weight files for [YOLOv4](https://drive.google.com/open?id=1JKF-bdIklxOOVy-2Cr5qdvjgGpmGfcbp) or [YOLOv4-tiny](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29) depending on what you will use to train your dataset.
+
+Now we will run a python script to generate our desired "train.txt" file with the image names. Please check the ___ .py file.
+
+To train the dataset after all the configuration, open an Anaconda command prompt and enter the following command:
+
+darknet.exe detector train data/obj.data cfg/yolov4-tiny-obj.cfg yolov4-tiny.conv.29
+
+This will begin the training process. Once this has been completed, navigate to the "Backup" folder in command line and run the following command:
+
+darknet.exe detector map data/obj.data cfg/yolov4-tiny-obj.cfg backup/***name of weights file***
+
+This will provide an mAP score of the weight file, take the file with the highest mAP. The last weights file is not necessarily always the greatest if there was a lot of overfitting during training.
+
+Once the model is created, we can run tests to gauge the performance. A few examples of how my model performed on standard images can be seen here. From this point on, we use computer vision to extract important information about the objects being detected.
+
+## Computer Vision
+
+In this section, we use computer vision to extract key information from the objects detected, suc as determining the state of detected traffic lights.
+
+
+
+
