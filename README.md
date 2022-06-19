@@ -85,7 +85,11 @@ The purpose of creating a dataset is to train the YOLO network to identify objec
 
 For the model to perform well, we need a high volume of images that are correctly labelled with instances of the objects previously mentioned. The more instances of objects passed through the network for training, the better the performance we can expect. There are some examples of Traffic Sign datasets available online to choose from, namely [Road Sign Detection from Kaggle](https://www.kaggle.com/datasets/andrewmvd/road-sign-detection), [GTSRB - German Traffic Sign Recognition Benchmark](https://www.kaggle.com/datasets/meowmeowmeowmeowmeow/gtsrb-german-traffic-sign) and [Mapillary](https://www.mapillary.com/dataset/trafficsign). 
 
-However for the specificity of the task at hand, I went out of my way to produce a model with open source images. A few sources of images include [Unsplash](https://unsplash.com/), [Google Images](https://www.google.com/imghp?hl=EN) and [Pixabay](https://pixabay.com/). A python script (download_from_google.py) from [**this repository**](https://github.com/haroonshakeel/simple_image_download) was used to mass download images from Google Images and the [Image Downloader](https://chrome.google.com/webstore/detail/image-downloader/cnpniohnfphhjihaiiggeabnkjhpaldj) google extension was also used to mass download from the open source image websites. Ensure all the images are stored in a single folder and are **ALL IN ".jpg" FORMAT.**
+However for the specificity of the task at hand, I went out of my way to produce a model with open source images. A few sources of images include [Unsplash](https://unsplash.com/), [Google Images](https://www.google.com/imghp?hl=EN) and [Pixabay](https://pixabay.com/). A python script (download_from_google.py) from [**this repository**](https://github.com/haroonshakeel/simple_image_download) was used to mass download images from Google Images and the [Image Downloader](https://chrome.google.com/webstore/detail/image-downloader/cnpniohnfphhjihaiiggeabnkjhpaldj) google extension was also used to mass download from the open source image websites.
+
+There are pre-labelled open source image datasets available on [Google](https://storage.googleapis.com/openimages/web/visualizer/index.html?set=train&type=detection&c=%2Fm%2F0k4j) for any classes you may need extra images for. Images were mass downloaded using [OIDv4 Toolkit](https://github.com/theAIGuysCode/OIDv4_ToolKit), particularly for extra traffic lights and vehicle representation in the dataset. More guidance can be found in [this Youtube Tutorial](https://www.youtube.com/watch?v=mmj3nxGT2YQ&list=PLKHYJbyeQ1a3tMm-Wm6YLRzfW1UmwdUIN&index=2). 
+
+Ensure all the images are stored in a single folder and are **ALL IN ".jpg" FORMAT** for the dataset.
 
 ## Augmenting the images
 
@@ -101,8 +105,21 @@ The ImgAug library has functions that allow you perform rotation and many more a
 
 [LabelImg](https://github.com/tzutalin/labelImg/releases/tag/v1.8.1)
 
-The LabelImg software specified above is the software used to annotate the images within the dataset. Extract the folder to the same directory as the dataset. A .txt file containing the names of the classes to be annotated must be provided in the "data" folder of the windows_v1.8.1 folder, which will allow you to specify what objects are being annotated in each image. 
+The LabelImg software specified above is the software used to annotate the images within the dataset. Extract the folder to the same directory as the dataset. A .txt file containing the names of the classes to be annotated must be provided in the "data" folder of the windows_v1.8.1 folder, which will allow you to specify what objects are being annotated in each image. Ensure that each class name is written on a new line in the text file, as each line specifies the name of a new class. 
 
 Open the software and click "Open" to navigate to the folder of the dataset. This will load up the first image of the dataset. Then ensure the files to be generated are of the **YOLO** type, which can be done by clicking the box on the left of the GUI named "Pascal VOC" several times until "YOLO" appears.
 
 To annotate an image, click the "Create/nRectBox" and draw a box over the object to be detected which is present in the image. This process can be repeated multiple times if there are multiple instances of objects to be detected. Once all objects are highlighted, click "Save" and ensure the text file is to be saved in the same directory as the dataset. Repeat the process until all images are annotated. Once this is done, you should have a dataset with a .jpg file with a corrsponding .txt file.
+
+## Increasing the size of the dataset
+
+[Roboflow](https://roboflow.com/)
+
+[Roboflow](https://roboflow.com/) is a good website to use to increase the size and add even more augmentation methods to your labelled dataset. You can also use it to manage and observe the number of labelled instances for each class in your dataset. Even after augmentation, Roboflow will generate YOLO files that correspond with the updated coordinates of where the object is present in an image, which is why it is important to label your dataset first before using this tool.
+
+## Training the dataset
+
+In the Darknet directory, open the **Data** folder and create a new folder called **"obj"**. Then copy and paste the dataset into this folder. In the **Data** folder again, copy and paste the **"coco.names"** and **"coco.data"** files and rename them to **obj.names** and **obj.data** respectively. In the "obj.names" file, replace the contents of the file with the contents of the text file placed in the data folder used for labelling. This will line up the class numbers with the names of the classes for training. In the "obj.data" file you must specify the parameters such as the number of classes in the dataset and the directories where the text files for training and validation (validation not mandatory) are. 
+
+We must establish the VRAM requirement of your system. This will allow us to determine what version of YOLO you can train your machine on, otherwise you will encounter memory issues.
+Back in the darknet directory, open the **"cfg"** folder and look for the **"**
