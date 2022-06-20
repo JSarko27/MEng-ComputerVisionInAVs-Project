@@ -40,26 +40,6 @@ I personally had issues while using the vcpkg option to install OpenCV with CUDA
 
 **Note: When creating a python environment, ensure the same environment is used throughout the project.**
 
-To build a darknet project, open the CMake GUI and specify the address of the source code and the folder for the project to be built to the darknet folder previously specified. Then click "Configure" and set the following parameters:
-
-Generator for Project: Visual Studio 16 2019
-
-Optional Platform: x64
-
-Leave the rest as default and click "Finish".
-
-Once the initial configuration is complete, check the CUDA Architecture of your system [**here**](https://developer.nvidia.com/cuda-gpus). Then head back to the CMake GUI and click the drop down of the "CMAKE" section and change the architecture to the architecture of your system. If you have an archiecture of 8.6, ensure you enter 86.
-
-Then click the drop down of "ENABLE" and ensure the following options are selected:
-- ENABLE_CUDA
-- ENABLE_CUDNN
-- ENABLE_OPENCV
-- ENABLE_VCPKG_INTEGRATION
-
-Then generate the project by clicking "Generate".
-
-Visual Studio should open with a Darknet project. Along the top of the application next to the "x64" dropdown, change "Debug" to "Release". Then select the "Build" ribbon and enter the "Configuration Manager". Select the tickbox corresponding with "INSTALL" under the "Build" column. Close the Configuration Manager and build the project by clicking "Build Solution" under the "Build" ribbon.
-
 Here are some good step by step video tutorials to install YOLO and OpenCV if you run into any issues with the vcpkg method.
 
 [YOLO Install](https://www.youtube.com/watch?v=WK_2bpWj35A)
@@ -159,8 +139,26 @@ Once the model is created, we can run tests to gauge the performance. A few exam
 
 ## Computer Vision
 
-In this section, we use computer vision to extract key information from the objects detected, suc as determining the state of detected traffic lights.
+In this section, we use computer vision to extract key information from the objects detected, such as determining the state of detected traffic lights.
 
+This project was carried out using Microsoft Visual Studio Code, where the python environment can be easily changed using the Interpreter. Ensure the python environment is set to the same environment which was used when OpenCV with CUDA capabilities was installed. This will provide optimal performance when using OpenCV's "DNN" module.
 
+We also import a library called "CVZone". This helps to achieve easy overlaying of images, which we use to display instructions to the user dependent on the state of the objects that are detected. This allows us to use ".png" images to display messages rather than using the OpenCV text function. 
 
+In the main python script, we convert the input video stream from RGB to HSV colour format. This allows us to specify a combination of HSV ranges to declare a colour. An example of specifying the HSV colour ranges of a red traffic light can be seen in the image below. This was achieved with the ___ python script. This process was performed on traffic lights and speed limit signs, for Red/Amber/Green traffic light states, and then Red/Blue for maximum/minimum speed limit states.
+
+In the main python script, we open the "obj.names" file to store the class names of our objects in memory.
+We also read the deep learning network with the weights file we created previously and the corresponding configuration file in the following line:
+
+net = cv.dnn.readNet(weights, cfg)
+
+We then specify the directory and the input video from which we want to run object detection on. The python script will split the video into individual frames and run detection on each frame before moving onto the next frame, giving us video playback with the detected objects shown.
+
+We use OpenCV's "model.detect" to obtain the detected class along with its confidence score and box parameters which we can use to manually draw a rectangle around the deteted object. This is used in the following line:
+
+classes, scores, boxes = model.detect(b, Conf_threshold, NMS_threshold)
+
+We then get into the specifics of what should be done should a traffic light or a speed limit sign is detected. 
+
+Using the HSV colour information we obtained with the ___ script, we can use OpenCV's perspectiveTransform and warpPerspective to obtain a bird's eye view of the object. We then dilate the object before using the "countNonZero" function to count the number of pixels within the specified colour ranges. The CVZone library is then used to overlay messages based on the state of the object.
 
