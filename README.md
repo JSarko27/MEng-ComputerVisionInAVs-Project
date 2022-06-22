@@ -1,4 +1,4 @@
-# MEng Computer Vision in Autonomous Vehicles Project
+# MEng Computer Vision in AVs Project
 Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection.
 Object detection was achieved by labelling my own dataset and training on the YOLOv4-tiny network.
 
@@ -134,11 +134,15 @@ Now we will run a python script to generate our desired "train.txt" file with th
 
 To train the dataset after all the configuration, open an Anaconda command prompt and enter the following command:
 
+```
 darknet.exe detector train data/obj.data cfg/yolov4-tiny-obj.cfg yolov4-tiny.conv.29
+```
 
 This will begin the training process. Once this has been completed, navigate to the "Backup" folder in command line and run the following command:
 
+```
 darknet.exe detector map data/obj.data cfg/yolov4-tiny-obj.cfg backup/***name of weights file***
+```
 
 This will provide an mAP score of the weight file, take the file with the highest mAP. The last weights file is not necessarily always the greatest if there was a lot of overfitting during training.
 
@@ -150,7 +154,13 @@ In this section, we use computer vision to extract key information from the obje
 
 This project was carried out using Microsoft Visual Studio Code, where the python environment can be easily changed using the Interpreter. Ensure the python environment is set to the same environment which was used when OpenCV with CUDA capabilities was installed. This will provide optimal performance when using OpenCV's "DNN" module.
 
-We also import a library called "CVZone". This helps to achieve easy overlaying of images, which we use to display instructions to the user dependent on the state of the objects that are detected. This allows us to use ".png" images to display messages rather than using the OpenCV text function. 
+We also import a library called "CVZone", which can be installed by entering the following command in an anaconda command prompt in your python environment:
+
+```
+pip install cvzone
+```
+
+This helps to achieve easy overlaying of images, which we use to display instructions to the user dependent on the state of the objects that are detected. This allows us to use ".png" images to display messages rather than using the OpenCV text function. 
 
 In the main python script (**yolo_test.py**), we convert the input video stream from RGB to HSV colour format. This allows us to specify a combination of HSV ranges to declare a colour. An example of specifying the HSV colour ranges of a red traffic light can be seen in the image below. This was achieved with the **colourdetection.py** python script. This process was performed on traffic lights and speed limit signs, for Red/Amber/Green traffic light states, and then Red/Blue for maximum/minimum speed limit states.
 
@@ -159,13 +169,17 @@ In the main python script (**yolo_test.py**), we convert the input video stream 
 In the **yolo_test.py** script, we open the "obj.names" file to store the class names of our objects in memory.
 We also read the deep learning network with the weights file we created previously and the corresponding configuration file in the following line:
 
+```
 net = cv.dnn.readNet(weights, cfg)
+```
 
 We then specify the directory and the input video from which we want to run object detection on. The python script will split the video into individual frames and run detection on each frame before moving onto the next frame, giving us video playback with the detected objects shown.
 
 We use OpenCV's "model.detect" to obtain the detected class along with its confidence score and box parameters which we can use to manually draw a rectangle around the deteted object. This is used in the following line:
 
+```
 classes, scores, boxes = model.detect(b, Conf_threshold, NMS_threshold)
+```
 
 We then get into the specifics of what should be done should a traffic light or a speed limit sign is detected. 
 
