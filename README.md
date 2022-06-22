@@ -10,16 +10,16 @@ For more details regarding the process and findings from this project, see the *
 # Installing YOLOv4
 To install YOLOv4 locally, a system with an NVIDIA GPU is required, as well as the following software prerequisites:
 
--Microsoft Visual Studio Community 2019
--Git 2.35
--Microsoft Powershell
--CUDA Computing Toolkit 11.6
--cuDNN 8.3.2
--CMake 3.22.2
--OpenCV 4.5.2
--OpenCV-contrib 4.5.2
--Anaconda
--[MinGW](https://sourceforge.net/projects/mingw/)
+- Microsoft Visual Studio Community 2019
+- Git 2.35
+- Microsoft Powershell
+- CUDA Computing Toolkit 11.6
+- cuDNN 8.3.2
+- CMake 3.22.2
+- OpenCV 4.5.2
+- OpenCV-contrib 4.5.2
+- Anaconda
+- [MinGW](https://sourceforge.net/projects/mingw/)
 
 The first step to be taken is to ensure that your system has the required software development environment required to compile programs later during the installation phase. This is achieved by installing the [MinGW](https://sourceforge.net/projects/mingw/) base compiler first.
 
