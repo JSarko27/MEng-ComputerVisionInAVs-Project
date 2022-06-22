@@ -1,5 +1,5 @@
 # MEng Computer Vision in AVs Project
-Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection.
+Final Year individual project on how computer vision can be implemented in autonomous vehicles.
 Object detection was achieved by labelling my own dataset and training on the YOLOv4-tiny network.
 
 https://user-images.githubusercontent.com/99783917/174925344-9a4218ba-2b11-4cfc-b474-9c39edd9d078.mp4
@@ -98,7 +98,7 @@ To annotate an image, click the "Create/nRectBox" and draw a box over the object
 <img width="733" alt="BalancedDatasetHealth" src="https://user-images.githubusercontent.com/99783917/174926837-667e2d2d-e14b-48e7-afba-d354d68f0d75.png">
 
 
-[Roboflow](https://roboflow.com/) is a good website to use to increase the size and add even more augmentation methods to your labelled dataset. You can also use it to manage and observe the number of labelled instances for each class in your dataset. Even after augmentation, Roboflow will generate YOLO files that correspond with the updated coordinates of where the object is present in an image, which is why it is important to label your dataset first before using this tool.
+[Roboflow](https://roboflow.com/) is a good website to use to increase the size and add even more augmentation methods to your labelled dataset. You can also use it to manage and observe the number of labelled instances for each class in your dataset. Even after augmentation, Roboflow will generate YOLO files that correspond with the updated coordinates of where the object is present in an image, which is why it is important to label your dataset first before using this tool. The final dataset came to approximately 302000 images. Moving folders around directories often led to the corruption of files. Before moving onto the next step, run **delete_corrupt_jpg.py** script to cleanse your dataset of corrupt images before training.
 
 ## Training the dataset
 
