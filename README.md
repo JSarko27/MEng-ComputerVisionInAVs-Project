@@ -29,7 +29,7 @@ The next steps can be found on the original [YOLOv4](https://github.com/AlexeyAB
 
 ## **Building OpenCV with CUDA support** 
 
-I personally had issues while using the vcpkg option to install OpenCV with CUDA support. A link to a useful step by step video to install OpenCV with CUDA support is provided below.
+A useful step by step video to install OpenCV with CUDA support is provided below should issues arise during installation.
 
 **Note: When creating a python environment, ensure the same environment is used throughout the project.**
 
@@ -72,7 +72,7 @@ To provide more context to the images within the dataset, python scripts were de
 
 pip install imgaug
 
-The scripts can be found in the ___ folder.
+The scripts can be found in the Augmentation folder.
 
 The ImgAug library has functions that allow you perform rotation and many more augmentation methods. In this project, we tried to emulate potential scenarios in which a driver may have to encounter the objects to be detected, such as rainy/foggy/snowy conditions. These weather conditions, as well as different levels of zoom, brightness and more methods were applied to the set of images with the use of several python scripts. This allowed each generated picture to follow a naming scheme which made it easier to find particular images if needed.
 
@@ -128,7 +128,7 @@ Then below each "[yolo]", change the number of classes to the number of classes 
 
 Download either of the following weight files for [YOLOv4](https://drive.google.com/open?id=1JKF-bdIklxOOVy-2Cr5qdvjgGpmGfcbp) or [YOLOv4-tiny](https://github.com/AlexeyAB/darknet/releases/download/darknet_yolo_v4_pre/yolov4-tiny.conv.29) depending on what you will use to train your dataset.
 
-Now we will run a python script to generate our desired "train.txt" file with the image names. Please check the ___ .py file.
+Now we will run a python script to generate our desired "train.txt" file with the image names. Please check the image_lister.py file.
 
 To train the dataset after all the configuration, open an Anaconda command prompt and enter the following command:
 
@@ -150,11 +150,11 @@ This project was carried out using Microsoft Visual Studio Code, where the pytho
 
 We also import a library called "CVZone". This helps to achieve easy overlaying of images, which we use to display instructions to the user dependent on the state of the objects that are detected. This allows us to use ".png" images to display messages rather than using the OpenCV text function. 
 
-In the main python script, we convert the input video stream from RGB to HSV colour format. This allows us to specify a combination of HSV ranges to declare a colour. An example of specifying the HSV colour ranges of a red traffic light can be seen in the image below. This was achieved with the ___ python script. This process was performed on traffic lights and speed limit signs, for Red/Amber/Green traffic light states, and then Red/Blue for maximum/minimum speed limit states.
+In the main python script (**yolo_test.py**), we convert the input video stream from RGB to HSV colour format. This allows us to specify a combination of HSV ranges to declare a colour. An example of specifying the HSV colour ranges of a red traffic light can be seen in the image below. This was achieved with the **colourdetection.py** python script. This process was performed on traffic lights and speed limit signs, for Red/Amber/Green traffic light states, and then Red/Blue for maximum/minimum speed limit states.
 
 ![TrafficLightTest](https://user-images.githubusercontent.com/99783917/174927834-f968c4ec-b886-45e1-9cbe-faf2894ede1e.png)
 
-In the main python script, we open the "obj.names" file to store the class names of our objects in memory.
+In the **yolo_test.py** script, we open the "obj.names" file to store the class names of our objects in memory.
 We also read the deep learning network with the weights file we created previously and the corresponding configuration file in the following line:
 
 net = cv.dnn.readNet(weights, cfg)
@@ -167,9 +167,9 @@ classes, scores, boxes = model.detect(b, Conf_threshold, NMS_threshold)
 
 We then get into the specifics of what should be done should a traffic light or a speed limit sign is detected. 
 
-Using the HSV colour information we obtained with the ___ script, we can use OpenCV's perspectiveTransform and warpPerspective to obtain a bird's eye view of the object. We then dilate the object before using the "countNonZero" function to count the number of pixels within the specified colour ranges. The CVZone library is then used to overlay messages based on the state of the object.
+Using the HSV colour information we obtained with the **colourdetection.py** script, we can use OpenCV's perspectiveTransform and warpPerspective to obtain a bird's eye view of the object. We then dilate the object before using the "countNonZero" function to count the number of pixels within the specified colour ranges. The CVZone library is then used to overlay messages based on the state of the object.
 
-An example can be seen with this maximum speed limit sign. Despite being placed on a blue reminiscent of a minimum speed limit sign, it accurately counts more red pixels than blue, showing that it is only account for the object itself as opposed to the background within the rectangle drawn around the object.
+An example can be seen with this maximum speed limit sign. Despite being placed on a blue reminiscent of a minimum speed limit sign, it accurately counts more red pixels than blue, showing that it is only accounting for the object itself as opposed to the background within the rectangle drawn around the object.
 
 <img width="769" alt="max30" src="https://user-images.githubusercontent.com/99783917/174928119-f5597783-677e-4971-a759-633a4b7f2a1c.png">
 
@@ -180,3 +180,5 @@ Then using the "CVZone" library, we can overlay ".png" images of our instruction
 This was also applied for the different traffic light states to produce the final HUD as shown below.
 
 <img width="649" alt="FinalHUD" src="https://user-images.githubusercontent.com/99783917/174928431-05d4ce83-66aa-405e-a335-49dd6a95f367.png">
+
+The **yolo_test.py** script is what is used to run detection on input videos.
