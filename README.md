@@ -1,7 +1,7 @@
 # MEng-AV-Project
 Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection
 Object detection was achieved by labelling my own dataset and training on YOLOv4-tiny network.
-(https://user-images.githubusercontent.com/99783917/174925056-6eb3f380-c765-4fa1-8397-2b0810adc3b1.mp4)
+https://user-images.githubusercontent.com/99783917/174925056-6eb3f380-c765-4fa1-8397-2b0810adc3b1.mp4
 
 
 # Thesis for Project
