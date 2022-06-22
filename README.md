@@ -70,7 +70,9 @@ Ensure all the images are stored in a single folder and are **ALL IN ".jpg" FORM
 
 To provide more context to the images within the dataset, python scripts were developed to implement different methods of image augmentation. This was achieved using the ImgAug python library, which can be obtained by entering the following command in an Anaconda prompt (ensure the correct python environment is selected):
 
+```
 pip install imgaug
+```
 
 The scripts can be found in the Augmentation folder.
 
