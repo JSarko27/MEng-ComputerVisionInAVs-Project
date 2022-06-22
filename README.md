@@ -1,6 +1,6 @@
 # MEng-AV-Project
-Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection
-Object detection was achieved by labelling my own dataset and training on YOLOv4-tiny network.
+Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection.
+Object detection was achieved by labelling my own dataset and training on the YOLOv4-tiny network.
 
 https://user-images.githubusercontent.com/99783917/174925344-9a4218ba-2b11-4cfc-b474-9c39edd9d078.mp4
 
@@ -10,25 +10,25 @@ For more details regarding the process and findings from this project, see the *
 # Installing YOLOv4
 To install YOLOv4 locally, a system with an NVIDIA GPU is required, as well as the following software prerequisites:
 
-Microsoft Visual Studio Community 2019
+-Microsoft Visual Studio Community 2019
 
-Git 2.35
+-Git 2.35
 
-Microsoft Powershell
+-Microsoft Powershell
 
-CUDA Computing Toolkit 11.6
+-CUDA Computing Toolkit 11.6
 
-cuDNN 8.3.2
+-cuDNN 8.3.2
 
-CMake 3.22.2
+-CMake 3.22.2
 
-OpenCV 4.5.2
+-OpenCV 4.5.2
 
-OpenCV-contrib 4.5.2
+-OpenCV-contrib 4.5.2
 
-Anaconda
+-Anaconda
 
-[MinGW](https://sourceforge.net/projects/mingw/)
+-[MinGW](https://sourceforge.net/projects/mingw/)
 
 The first step to be taken is to ensure that your system has the required software development environment required to compile programs later during the installation phase. This is achieved by installing the [MinGW](https://sourceforge.net/projects/mingw/) base compiler first.
 
@@ -75,6 +75,8 @@ Ensure all the images are stored in a single folder and are **ALL IN ".jpg" FORM
 
 ## Augmenting the images
 
+![Augment20mph](https://user-images.githubusercontent.com/99783917/174926161-34adc0c7-3d23-4716-8af7-3454487c36a1.jpg)
+
 To provide more context to the images within the dataset, python scripts were developed to implement different methods of image augmentation. This was achieved using the ImgAug python library, which can be obtained by entering the following command in an Anaconda prompt (ensure the correct python environment is selected):
 
 pip install imgaug
@@ -87,6 +89,9 @@ The ImgAug library has functions that allow you perform rotation and many more a
 
 [LabelImg](https://github.com/tzutalin/labelImg/releases/tag/v1.8.1)
 
+
+![LabelImg60mph](https://user-images.githubusercontent.com/99783917/174926528-6ca6ee28-3e77-4d3d-93fb-c8cb61bf04be.png)
+
 The LabelImg software specified above is the software used to annotate the images within the dataset. Extract the folder to the same directory as the dataset. A .txt file containing the names of the classes to be annotated must be provided in the "data" folder of the windows_v1.8.1 folder, which will allow you to specify what objects are being annotated in each image. Ensure that each class name is written on a new line in the text file, as each line specifies the name of a new class. 
 
 Open the software and click "Open" to navigate to the folder of the dataset. This will load up the first image of the dataset. Then ensure the files to be generated are of the **YOLO** type, which can be done by clicking the box on the left of the GUI named "Pascal VOC" several times until "YOLO" appears.
@@ -96,6 +101,9 @@ To annotate an image, click the "Create/nRectBox" and draw a box over the object
 ## Increasing the size of the dataset
 
 [Roboflow](https://roboflow.com/)
+
+<img width="733" alt="BalancedDatasetHealth" src="https://user-images.githubusercontent.com/99783917/174926837-667e2d2d-e14b-48e7-afba-d354d68f0d75.png">
+
 
 [Roboflow](https://roboflow.com/) is a good website to use to increase the size and add even more augmentation methods to your labelled dataset. You can also use it to manage and observe the number of labelled instances for each class in your dataset. Even after augmentation, Roboflow will generate YOLO files that correspond with the updated coordinates of where the object is present in an image, which is why it is important to label your dataset first before using this tool.
 
@@ -108,6 +116,8 @@ Back in the darknet directory, open the **"cfg"** folder and look for the **"yol
 
 Under "# Training"
 
+<img width="413" alt="cfg1" src="https://user-images.githubusercontent.com/99783917/174927494-8963102d-b86b-4ce2-a7c5-cc95b74c6020.png">
+
 - batch=64
 - subdivisions=32
 - width=416
@@ -118,6 +128,8 @@ Further down
 - steps = 0.8 * max_batches, 0.9 * max_batches
 
 Then Ctrl+F and search for **"[yolo]"**.
+
+<img width="377" alt="cfg2" src="https://user-images.githubusercontent.com/99783917/174927513-8b454799-4cc5-4b13-bea6-f07c3640ea2b.png">
 
 Above each "[yolo]", change the number of filters to (number of classes + 5) * 3. So for 12 classes, (12 + 5) * 3 = 51 Filters.
 
@@ -149,6 +161,8 @@ We also import a library called "CVZone". This helps to achieve easy overlaying 
 
 In the main python script, we convert the input video stream from RGB to HSV colour format. This allows us to specify a combination of HSV ranges to declare a colour. An example of specifying the HSV colour ranges of a red traffic light can be seen in the image below. This was achieved with the ___ python script. This process was performed on traffic lights and speed limit signs, for Red/Amber/Green traffic light states, and then Red/Blue for maximum/minimum speed limit states.
 
+![TrafficLightTest](https://user-images.githubusercontent.com/99783917/174927834-f968c4ec-b886-45e1-9cbe-faf2894ede1e.png)
+
 In the main python script, we open the "obj.names" file to store the class names of our objects in memory.
 We also read the deep learning network with the weights file we created previously and the corresponding configuration file in the following line:
 
@@ -164,3 +178,14 @@ We then get into the specifics of what should be done should a traffic light or 
 
 Using the HSV colour information we obtained with the ___ script, we can use OpenCV's perspectiveTransform and warpPerspective to obtain a bird's eye view of the object. We then dilate the object before using the "countNonZero" function to count the number of pixels within the specified colour ranges. The CVZone library is then used to overlay messages based on the state of the object.
 
+An example can be seen with this maximum speed limit sign. Despite being placed on a blue reminiscent of a minimum speed limit sign, it accurately counts more red pixels than blue, showing that it is only account for the object itself as opposed to the background within the rectangle drawn around the object.
+
+<img width="769" alt="max30" src="https://user-images.githubusercontent.com/99783917/174928119-f5597783-677e-4971-a759-633a4b7f2a1c.png">
+
+Then using the "CVZone" library, we can overlay ".png" images of our instructions based on what is detected. The state of the object is also added to the label of the detected class.
+
+<img width="810" alt="labelmax30" src="https://user-images.githubusercontent.com/99783917/174928351-91d0f69d-aa12-4913-9633-1955b367607c.png">
+
+This was also applied for the different traffic light states to produce the final HUD as shown below.
+
+<img width="649" alt="FinalHUD" src="https://user-images.githubusercontent.com/99783917/174928431-05d4ce83-66aa-405e-a335-49dd6a95f367.png">
