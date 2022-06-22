@@ -1,4 +1,4 @@
-# MEng-AV-Project
+# MEng Computer Vision in Autonomous Vehicles Project
 Final Year individual project on how computer vision can be implemented in autonomous vehicles with object detection.
 Object detection was achieved by labelling my own dataset and training on the YOLOv4-tiny network.
 
