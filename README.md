@@ -29,7 +29,7 @@ The next steps can be found on the original [YOLOv4](https://github.com/AlexeyAB
 
 ## **Building OpenCV with CUDA support** 
 
-A useful step by step video to install OpenCV with CUDA support is provided below should issues arise during installation.
+A useful step by step video to install OpenCV with CUDA support is provided below should issues arise during installation. This requires **CMake** to build the library.
 
 **Note: When creating a python environment, ensure the same environment is used throughout the project.**
 
